@@ -1,0 +1,52 @@
+version 0
+
+define_gate not
+inputs in
+outputs out
+nands n
+connections in => n in 0, in => n in 1, n out 0 => out
+
+render_nand_gate n 100 120 main nand gate
+
+define_gate and
+inputs a b
+outputs out
+nands nand
+custom_gates not = not
+connections a => nand in 0, b => nand in 1
+connections nand out 0 => not in 0, not out 0 => out
+
+render_nand_gate nand 200 120 nand gate
+render_custom_gate not 400 120 inverter
+
+define_gate or
+inputs a b
+outputs out
+nands n
+custom_gates not_a = not, not_b = not
+connections a => not_a in 0, b => not_b in 0
+connections not_a out 0 => n in 0, not_b out 0 => n in 1
+connections n out 0 => out
+
+define_gate nor
+inputs a b
+outputs out
+custom_gates not_a = not, not_b = not, and = and
+connections a => not_a in 0, b => not_b in 0
+connections not_a out 0 => and in 0, not_b out 0 => and in 1
+connections and out 0 => out
+
+define_gate sr_latch
+inputs reset set
+outputs out, not_out
+custom_gates nor_a = nor, nor_b = nor
+connections reset => nor_a in 0, set => nor_b in 1
+connections nor_a out 0 => nor_b in 0, nor_b out 0 => nor_a in 1
+connections nor_a out 0 => out, nor_b out 0 => not_out
+render_custom_gate nor_a 200 80 nor a
+render_custom_gate nor_b 200 180 nor b
+
+
+
+
+
